@@ -7,8 +7,6 @@ FROM scratch
 	#ADD ubuntu-*-oci-$LAUNCHPAD_BUILD_ARCH-root.tar.gz /
 # ADD BASE UBUNTU OS IMAGE -------------
 ADD add/ubuntu-kinetic-oci-amd64-root.tar.gz /
-# TOOLS ---------------------------------
-RUN apt-get update && apt-get install -y apt-utils htop nano net-tools iputils-ping sed less
 # SSH SERVER -----------------------------
 RUN apt-get update && apt-get install -y openssh-client openssh-server openssh-sftp-server
 #RUN mkdir /var/run/sshd && \ # dir already exists
@@ -23,6 +21,9 @@ ENV NOTVISIBLE "in users profile"
 # Expose ssh
 EXPOSE 22
 	### TODO: enabling ssh after the above config, not sure if needed, but couldn't ssh into this image on last check => RUN systemctl is-active ssh && systemctl is-enabled ssh
+# TOOLS ---------------------------------
+RUN apt-get update && apt-get install -y apt-utils htop nano net-tools iputils-ping \
+	sed less curl software-properties-common lsb-release git
 # CLEAN - apt packages and cache ---------------------------------
 RUN apt-get --purge autoremove -y && apt-get clean
 ENV TERM=xterm-256color
