@@ -111,8 +111,6 @@ __run_container() {
 	# now run....
 	echo "spawning new container..START"
 	docker run -d --rm -it -p 2227:22 --name=${__CONTAINER_NAME} ${__IMAGE_NAME}
-	docker build --build-arg MYUSER=setup --build-arg MYPASS=setup --build-arg MYUSERID=222 -t ${__CONTAINER_NAME} .
-	#docker build --build-arg MYUSER=setup --build-arg MYPASS=setup --build-arg MYUSERID=222 -t docker-ubuntu-base:latest .
 	echo "spawning new container...DONE"
 	read -p "press ENTER to CONTINUE or CTRL-C to ABORT...." __PAUSED
 	echo "Stop container with: [ docker stop '${__CONTAINER_NAME}' ]"
