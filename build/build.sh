@@ -78,9 +78,10 @@ __run(){
 	__prompt_for_container_name
 }
 
+
+# script can be controlled by passing in a single argument
+# if no match found, script will build image, then run container
 echo "PASSED ARGS: [$@]"
-
-
 if [ "${1}" == "build" ]; then
 	read -p "build image ( press ENTER to CONTINUE, CTRL-C to ABORT)" __PAUSED
 	__prompt_for_image_name
