@@ -51,4 +51,5 @@ ENV TERM=xterm-256color
 ENV COLORTERM=truecolor
 WORKDIR /var
 # SHELL session to start sshd and persist container once started
-CMD /usr/sbin/sshd && /bin/bash
+#CMD /usr/sbin/sshd && /bin/bash # don't start the sshd service yet... do it in the final extending image
+CMD /bin/bash
