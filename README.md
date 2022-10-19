@@ -86,7 +86,7 @@ $ ssh setup@192.168.0.12 -p 2227
 The authenticity of host '[192.168.0.12]:2227 ([192.168.0.12]:2227)' can't be established.
 ECDSA key fingerprint is SHA256:+32tG92LzIUTTIbdmgnZ3gQ//2FAE90twdkDaw6+JRY.
 Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '[192.168.0.202]:2227' (ECDSA) to the list of known hosts.
-setup@192.168.0.202's password:
+Warning: Permanently added '[192.168.0.12]:2227' (ECDSA) to the list of known hosts.
+setup@192.168.0.12's password:
 Welcome to Ubuntu Kinetic Kudu (development branch) (GNU/Linux 4.15.0-20-generic x86_64)
 ```
