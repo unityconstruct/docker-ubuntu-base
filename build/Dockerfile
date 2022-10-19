@@ -5,10 +5,10 @@ FROM scratch
 # docker-ubuntu-base:latest
 #
 # DOCKER BUILD:
-# docker build --build-arg MYUSER=setup --build-arg MYPASS=putes --build-arg MYUSERID=222 -t docker-ubuntu-base:latest .
+# docker build --build-arg MYUSER=setup --build-arg MYPASS=setup --build-arg MYUSERID=222 -t docker-ubuntu-base:latest .
 # ----------------------------------------
 # DOCKER RUN: example command to run image 
-# docker run -d --rm -it -p 2227:22 --name=CONTAINER_NAME docker-ubuntu-base:dev <...>
+# docker run -d --rm -it -p 2227:22 --name=CONTAINER_NAME docker-ubuntu-base:latest <...>
 #      -d : detached
 #    --rm : remove container when stopped
 #     -it : interactive with tty
@@ -25,14 +25,16 @@ FROM scratch
 ADD add/ubuntu-kinetic-oci-amd64-root.tar.gz /
 # SSH SERVER -----------------------------
 RUN apt-get update && apt-get install -y openssh-client openssh-server openssh-sftp-server
+# ARGs to allow user name/pass/id to be pass in from CLI at build-time
+#  default values are assigned, so passing in from CLI is optional
 ARG MYUSER=setup
 ARG MYPASS=setup
 ARG MYUSERID=222
 RUN	echo 'root:root' | chpasswd && \
-	# Add setup as id=${MYUSERID}
-	useradd -rm -s /bin/bash -g root -G sudo -u ${MYUSERID} setup && \
-	echo ${MYUSER}:${MYPASS} | chpasswd && \
+	# Add ${MYUSER} as id=${MYUSERID}
+	useradd -rm -s /bin/bash -g root -G sudo -u ${MYUSERID} ${MYUSER} && \
 	#echo 'setup:setup' | chpasswd && \
+	echo ${MYUSER}:${MYPASS} | chpasswd && \
 	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
 	sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd && \
 	echo "export VISIBLE=now" >> /etc/profile
