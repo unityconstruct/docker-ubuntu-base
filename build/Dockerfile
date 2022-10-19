@@ -1,15 +1,24 @@
 FROM scratch
 # base image for use in extending for other docker images
+# ----------------------------------------
 #         Repository:tag
 # docker-ubuntu-base:latest
-	# not used ---------------------------------
-	#ARG LAUNCHPAD_BUILD_ARCH=amd-64
-	#ADD ubuntu-*-oci-$LAUNCHPAD_BUILD_ARCH-root.tar.gz /
-# ADD BASE UBUNTU OS IMAGE -------------
+# ----------------------------------------
+# DOCKER RUN: example command to run image 
+# docker run -d --rm -it -p 2227:22 --name=CONTAINER_NAME ...
+#      -d : detached
+#    --rm : remove container when stopped
+#     -it : interactive with tty
+#      -p : assign EXPOSE port(s), in this case SSH=22
+#  --name : container name
+# ----------------------------------------
+# ADD BASE UBUNTU OS IMAGE (local file) --
+#  this image has been downloaded locally to ensure availability at build-time
+#  source:
+# https://git.launchpad.net/cloud-images/+oci/ubuntu-base/diff/kinetic/ubuntu-kinetic-oci-amd64-root.tar.gz?h=dist-amd64
 ADD add/ubuntu-kinetic-oci-amd64-root.tar.gz /
 # SSH SERVER -----------------------------
 RUN apt-get update && apt-get install -y openssh-client openssh-server openssh-sftp-server
-#RUN mkdir /var/run/sshd && \ # dir already exists
 RUN	echo 'root:root' | chpasswd && \
 	# Add setup as id=1002
 	useradd -rm -s /bin/bash -g root -G sudo -u 1002 setup && \
@@ -20,12 +29,13 @@ RUN	echo 'root:root' | chpasswd && \
 ENV NOTVISIBLE "in users profile"
 # Expose ssh
 EXPOSE 22
-	### TODO: enabling ssh after the above config, not sure if needed, but couldn't ssh into this image on last check => RUN systemctl is-active ssh && systemctl is-enabled ssh
-# TOOLS ---------------------------------
+# TOOLS ( put common utils here so duplicates are needed for each extending image )
 RUN apt-get update && apt-get install -y apt-utils htop nano net-tools iputils-ping \
 	sed less curl software-properties-common lsb-release git
-# CLEAN - apt packages and cache ---------------------------------
+# CLEAN - apt packages and cache ------------
 RUN apt-get --purge autoremove -y && apt-get clean
+# SET ENV VARS
 ENV TERM=xterm-256color
 ENV COLORTERM=truecolor
+# SHELL session to persist container once started
 CMD ["/bin/bash"]
